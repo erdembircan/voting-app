@@ -1,0 +1,67 @@
+{
+  "name": "voting-app",
+  "version": "1.0.0",
+  "description": "freeCodeCamp voting app project",
+  "main": "index.js",
+  "scripts": {
+    "develop": "gulp serve",
+    "test": "jest --verbose --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/erdembircan/voting-app.git"
+  },
+  "author": "Erdem Bircan <erdem.erdembircan@gmail.com> (https://erdembircan.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/erdembircan/voting-app/issues"
+  },
+  "homepage": "https://github.com/erdembircan/voting-app#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
+    "browser-sync": "^2.21.0",
+    "browserify": "^14.5.0",
+    "folder-delete": "^1.0.3",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-babel": "^7.0.0",
+    "gulp-define-module": "^0.1.5",
+    "gulp-develop-server": "^0.5.2",
+    "gulp-handlebars": "^4.0.0",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8",
+    "handlebars": "^3.0.3",
+    "hbsfy": "^2.8.1",
+    "jest": "^22.0.4",
+    "merge-stream": "^1.0.1",
+    "plugin": "^0.3.3",
+    "run-sequence": "^2.2.0",
+    "supertest": "^3.0.0",
+    "through2": "^2.0.3",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.9.0"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "bcrypt": "^1.0.3",
+    "chalk": "^2.3.0",
+    "compression": "^1.7.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "hmacsha1": "^1.0.0",
+    "jsonwebtoken": "^8.1.0",
+    "lodash": "^4.17.4",
+    "minimist": "^1.2.0",
+    "mongodb": "^3.0.1",
+    "mongoose": "^5.0.0-rc0"
+  }
+}
