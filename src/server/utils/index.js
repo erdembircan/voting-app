@@ -34,4 +34,16 @@ function nonce(length) {
   return text;
 }
 
-module.exports = { parseStringToObject, nonce };
+/**
+ * read session data and then remove it from session
+ * @param {object} req - request object
+ * @param {string} key - session property name
+ * @returns {string} - session property value
+ */
+function flashRead(req, key) {
+  const value = req.session[key];
+  req.session[key] = undefined;
+  return value;
+}
+
+module.exports = { parseStringToObject, nonce, flashRead };

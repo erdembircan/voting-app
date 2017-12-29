@@ -4,7 +4,7 @@ import mainTemp from '../templates/index.js';
 import authResp from '../templates/auth_res.js';
 import createAuthString from '../utils/twitterAuth';
 import sData from '../sData';
-import { parseStringToObject, nonce } from '../utils';
+import { parseStringToObject, nonce, flashRead } from '../utils';
 import { sign, verify } from '../utils/jwtUtils';
 import authenticate from '../middleware/authentication';
 
@@ -19,15 +19,22 @@ router.get('/favicon.ico', (req, res) => {
 
 router.get('/', (req, res) => {
   const authCookie = req.cookies['auth.loc'];
-  if (authCookie) {
-    const data = verify(authCookie, sData['jwt-secret'], (err, data) => {
-    });
-  }
-
-  res.send(mainTemp({
-    message: 'hello world!!!',
+  const mainData = {
+    message: flashRead(req, 'message'),
     extraScripts: "<script src= 'js/main_bundle.js' defer></script>",
-  }));
+  };
+
+  if (authCookie) {
+    verify(authCookie, sData['jwt-secret'], (err, data) => {
+      if (err) {
+        mainData.error = err;
+      } else {
+        mainData.user = {};
+        mainData.user.avatar = 'working on that';
+      }
+      res.send(mainTemp(mainData));
+    });
+  } else res.send(mainTemp(mainData));
 });
 
 router.get('/createpoll', authenticate, (req, res) => {
@@ -71,9 +78,9 @@ router.get('/login', (req, res, next) => {
 });
 
 router.get('/sign-in-with-twitter', (req, res, next) => {
-  const sessionToken = req.session.oauth_token;
+  const sessionToken = flashRead(req, 'oauth_token');
   const receivedToken = req.query.oauth_token;
-  const sessionTokenSecret = req.session.oauth_token_secret;
+  const sessionTokenSecret = flashRead(req, 'oauth_token_secret');
 
   if (sessionToken === receivedToken) {
     const authString = createAuthString(
@@ -111,8 +118,8 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
           User.findOne({ token: newUser.token }, (findErr, userData) => {
             if (findErr) next(findErr);
             const payload = sign(userData._id, sData['jwt-secret']);
-            req.session.destroy();
             res.cookie('auth.loc', payload);
+            req.session.message = 'log in successfull';
             res.redirect('/auth_resp');
           });
         });

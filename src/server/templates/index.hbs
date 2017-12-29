@@ -12,21 +12,34 @@
 <body>
   <div class="topNav">
     <div class="right">
-      <a href='/login' target="_blank" id='popUp'>
+      {{#if user}}
+      <a href='/createpoll'>
         <div class="navItem">
           Create Poll
           <div class="hoverSelection"></div>
         </div>
       </a>
+      <a href="/#">
+        <div class="navItem">
+          user
+          <div class="hoverSelection"></div>
+        </div>
+      </a>
+      {{else}}
       <a href="/login" target="_blank" id='popUp'>
         <div class="navItem">
           Log in
           <div class="hoverSelection"></div>
         </div>
       </a>
+      {{/if}}
     </div>
   </div>
+  <p>
 
+    {{message}}
+
+  </p>
   {{{extraScripts}}}
 
 </body>

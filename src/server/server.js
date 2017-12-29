@@ -7,7 +7,6 @@ import session from 'express-session';
 import mainRoute from './routes';
 import fourOfourTemp from './templates/404.js';
 import sData from './sData';
-import config from './config';
 
 const compress = compression({
   flush: zlib.Z_PARTIAL_FLUSH,
