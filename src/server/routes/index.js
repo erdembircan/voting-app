@@ -177,13 +177,12 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
           tokenSecret: parsedObj.oauth_token_secret,
         });
 
-
         newUser.save((err, save) => {
           if (err && err.code !== 11000) next(err);
           User.findOne({ token: newUser.token }, (findErr, userData) => {
             if (findErr) next(findErr);
             const payload = sign(userData._id, sData['jwt-secret']);
-            res.cookie('auth.loc', payload);
+            res.cookie('auth.loc', payload, { maxAge: 30 * 24 * 60 * 60 * 1000 });
             req.session.message = 'log in successfull';
             res.redirect('/auth_resp');
           });
