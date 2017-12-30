@@ -19,9 +19,9 @@
           <div class="hoverSelection"></div>
         </div>
       </a>
-      <a href="/#">
+      <a href="/user">
         <div class="navItem">
-          user
+          <img style="border-radius:10%" src= {{user.avatar}} />
           <div class="hoverSelection"></div>
         </div>
       </a>
@@ -36,9 +36,9 @@
     </div>
   </div>
   <p>
-
-    {{message}}
-
+    {{message}}<br/>
+    {{error}}<br/>
+    {{user.name}}<br/>
   </p>
   {{{extraScripts}}}
 

@@ -13,7 +13,19 @@ body
   padding: 0px
 
 .topNav
-  background: linear-gradient(to right, #1985c1, darken(#1985c1,10%))
+  // position: relative
+  // background: url('https://pbs.twimg.com/profile_banners/893691474835013632/1506860824') center center no-repeat
+  // background-size: cover
+  // height: 70px
+  // &:before
+  //   content: ''
+  //   position: absolute
+  //   top: 0
+  //   left: 0
+  //   right: 0
+  //   bottom: 0
+  //   background-image: linear-gradient(to right, rgba(9.8%, 52.2%, 75.7%, 100%), rgba(7.5%, 40%, 58%, 1))
+  background-image: linear-gradient(to right, rgba(9.8%, 52.2%, 75.7%, 100%) , rgba(7.5%, 40%, 58%, 1))
   height: 70px
   a
     width: 100%
@@ -39,6 +51,7 @@ body
     padding: 10px
     cursor: pointer
     text-align: center
+    transition: background-color .2s ease-out
     .hoverSelection
       position: absolute
       bottom: 0
@@ -48,7 +61,9 @@ body
       transition: border-bottom .2s ease-out
   .navItem:hover
     .hoverSelection
-      border-bottom: 5px solid #1985c1 
+      border-bottom: 5px solid #1985c1
+  .navItem:active
+    background-color: darken(#97e6ff , 50%)
     
 
 

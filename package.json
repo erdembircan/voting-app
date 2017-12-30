@@ -64,6 +64,7 @@
     "lodash": "^4.17.4",
     "minimist": "^1.2.0",
     "mongodb": "^3.0.1",
-    "mongoose": "^5.0.0-rc0"
+    "mongoose": "^5.0.0-rc0",
+    "xmlhttprequest": "^1.8.0"
   }
 }

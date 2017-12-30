@@ -21,6 +21,8 @@ export default class Server {
     this._app.use('/css', express.static('../client/css'));
     this._app.use('/js', express.static('../client/scripts'));
 
+    this._app.set('json spaces', 2);
+
     this._app.use(session({
       secret: sData['session-secret'],
       resave: false,

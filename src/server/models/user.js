@@ -17,7 +17,7 @@ UserSchema.pre('save', function saveHook(next) {
     if (err) return next(err);
 
     user.password = bcrypt.hashSync(user.password, salt);
-    user.tokenSecret = bcrypt.hashSync(user.tokenSecret, salt);
+    // user.tokenSecret = bcrypt.hashSync(user.tokenSecret, salt);
 
     return next();
   });

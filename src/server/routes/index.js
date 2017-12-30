@@ -7,6 +7,7 @@ import sData from '../sData';
 import { parseStringToObject, nonce, flashRead } from '../utils';
 import { sign, verify } from '../utils/jwtUtils';
 import authenticate from '../middleware/authentication';
+import { XMLHttpRequest } from 'xmlhttprequest';
 
 require('../models/user');
 const User = require('mongoose').model('User');
@@ -17,7 +18,7 @@ router.get('/favicon.ico', (req, res) => {
   res.sendStatus(203);
 });
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   const authCookie = req.cookies['auth.loc'];
   const mainData = {
     message: flashRead(req, 'message'),
@@ -28,17 +29,80 @@ router.get('/', (req, res) => {
     verify(authCookie, sData['jwt-secret'], (err, data) => {
       if (err) {
         mainData.error = err;
+        res.send(mainTemp(mainData));
       } else {
-        mainData.user = {};
-        mainData.user.avatar = 'working on that';
+        User.findOne({ _id: data })
+          .then((user) => {
+            const userToken = user.token;
+            const userTokenSecret = user.tokenSecret;
+
+            const authString = createAuthString(
+              {
+                consumer_key: sData['twitter-consumer-key'],
+                nonce: nonce(42),
+                signature_method: 'HMAC-SHA1',
+                token: userToken,
+                tokenSecret: userTokenSecret,
+              },
+              'get',
+              'https://api.twitter.com/1.1/account/verify_credentials.json',
+            );
+
+            axios({
+              method: 'get',
+              url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
+              headers: { Authorization: authString },
+            })
+              .then((resp) => {
+                mainData.user = {};
+                mainData.user.avatar = resp.data.profile_image_url;
+                mainData.user.name = 'working on that';
+                res.send(mainTemp(mainData));
+              })
+              .catch((err) => {
+                next(err);
+              });
+          })
+          .catch((err) => {
+            next(err);
+          });
       }
-      res.send(mainTemp(mainData));
     });
   } else res.send(mainTemp(mainData));
 });
 
 router.get('/createpoll', authenticate, (req, res) => {
   res.send('ok');
+});
+
+router.get('/user', (req, res, next) => {
+  const authString = createAuthString(
+    {
+      consumer_key: sData['twitter-consumer-key'],
+      nonce: nonce(42),
+      signature_method: 'HMAC-SHA1',
+      token: '893691474835013632-yqpEfnVjOcAg3ngzUYepYr0JAEek4k7',
+      tokenSecret: 'Etv25cj2kIDH1rDTkw6ImuNBv5pAlH9qT5zDfonp2EW3r',
+    },
+    'get',
+    'https://api.twitter.com/1.1/account/verify_credentials.json',
+  );
+
+  const config = {
+    headers: { Authorization: authString },
+  };
+
+  axios({
+    method: 'get',
+    url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
+    headers: { Authorization: authString },
+  })
+    .then((resp) => {
+      res.send(resp.data);
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
 router.get('/login', (req, res, next) => {
@@ -112,6 +176,7 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
           token: parsedObj.oauth_token,
           tokenSecret: parsedObj.oauth_token_secret,
         });
+
 
         newUser.save((err, save) => {
           if (err && err.code !== 11000) next(err);

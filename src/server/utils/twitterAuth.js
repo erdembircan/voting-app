@@ -64,10 +64,21 @@ function createAuthString(parameters, type, url) {
  * @returns {string} - signature
  */
 function generateSignature(type, url, parameters, body, tokenSecret) {
-  const signatureParams = `${type.toUpperCase()}&${encodeURIComponent(url)}&${encodeURIComponent(parameters.join('&'))}${body ? encodeURIComponent(`&${body}`) : ''}`;
+  const signatureParams = `${type.toUpperCase()}&${encodeURIComponent(url)}&${encodeURIComponent(parameters.sort(sortParams).join('&'))}${body ? encodeURIComponent(`&${body}`) : ''}`;
 
   const signingKey = `${sData['twitter-consumer-secret']}&${tokenSecret || ''}`;
+
   return hash(signingKey, signatureParams);
+}
+
+
+function sortParams(a, b) {
+  const parsedA = a.substr(6);
+  const parsedB = b.substr(6);
+
+  if (parsedA > parsedB) return 1;
+  if (parsedA < parsedB) return -1;
+  return 0;
 }
 
 module.exports = createAuthString;
