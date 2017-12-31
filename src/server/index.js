@@ -1,7 +1,7 @@
 import minimist from 'minimist';
 import Server from './server';
 import config from './config';
-// import { connect } from './models';
+import sData from './sData';
 
 const args = minimist(process.argv, {
   default: {
@@ -9,7 +9,7 @@ const args = minimist(process.argv, {
   },
 });
 
-require('./models').connect(config.mongodbURL);
+require('./models').connect(sData['mongo-prod']);
 
 const server = new Server(args['server-port']);
 server.listen();
