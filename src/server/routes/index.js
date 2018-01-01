@@ -24,6 +24,7 @@ router.get('/', (req, res, next) => {
   const authCookie = req.cookies['auth.loc'];
   const mainData = {
     message: flashRead(req, 'message'),
+    error: flashRead(req, 'error'),
     extraScripts: "<script src= 'js/main_bundle.js' defer></script>",
   };
 
