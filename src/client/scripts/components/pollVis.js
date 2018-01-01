@@ -82,6 +82,7 @@ class PollVis {
       const textY =
         Math.sin(endAngle - finishAngle / 2) * pieRadius * this._params.textDistanceMultiplier;
 
+      ctx.textAlign = 'center';
       ctx.fillText(`${percents[i]}%`, textX, textY);
 
       ctx.restore();
