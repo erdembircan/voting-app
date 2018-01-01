@@ -1,18 +1,39 @@
 class PollVis {
-  constructor(id, donutRadiusMultiplier = 0) {
+  constructor(
+    id,
+    params = {
+      donutRadiusMultiplier: 0,
+      textDistanceMultiplier: 0,
+      textFontSize: '1rem',
+      textFontFamily: 'serif',
+      colors: [
+        'rgba(81, 145, 253, 1)',
+        'rgba(22, 71, 233, 1)',
+        'rgba(232, 42, 55, 1)',
+        'rgba(13, 169, 33, 1)',
+        'rgba(166, 72, 71, 1)',
+      ],
+    },
+  ) {
     this._id = id;
     this._canvas = document.querySelector(`[data-id='${this._id}']`);
-    this._colors = [
-      'rgba(81, 145, 253, 1)',
-      'rgba(22, 71, 233, 1)',
-      'rgba(232, 42, 55, 1)',
-      'rgba(13, 169, 33, 1)',
-    ];
-    this._donutRadiusMultiplier = donutRadiusMultiplier;
+    // this._colors = [
+    //   'rgba(81, 145, 253, 1)',
+    //   'rgba(22, 71, 233, 1)',
+    //   'rgba(232, 42, 55, 1)',
+    //   'rgba(13, 169, 33, 1)',
+    //   'rgba(166, 72, 71, 1)',
+    // ];
+    this._params = params;
+    this._colors = this._params.colors;
   }
 
-  draw(percents) {
+  draw(values) {
+    const percents = this._calculatePercents(values);
     const ctx = this._canvas.getContext('2d');
+
+    ctx.globalCompositeOperation = 'source-over';
+
     const canvasWidth = this._canvas.width;
     const canvasHeight = this._canvas.height;
 
@@ -23,12 +44,16 @@ class PollVis {
 
     ctx.save();
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = this._colors[0];
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.503)';
+    ctx.shadowBlur = 10;
     ctx.beginPath();
     ctx.arc(canvasWidth / 2, canvasHeight / 2, pieRadius, 0, Math.PI * 2);
     ctx.closePath();
     ctx.fill();
     ctx.save();
+
+    // ctx.restore();
 
     let startAngle = 0;
 
@@ -36,24 +61,44 @@ class PollVis {
       ctx.fillStyle = this._colors[i % this._colors.length];
 
       const finishAngle = this._calculateRadiantFromPercent(percents[i]);
+      const endAngle = startAngle + finishAngle;
 
+      // draw pie slice
       ctx.beginPath();
       ctx.moveTo(canvasWidth / 2, canvasHeight / 2);
-      ctx.arc(canvasWidth / 2, canvasHeight / 2, pieRadius, startAngle, startAngle + finishAngle);
+      ctx.arc(canvasWidth / 2, canvasHeight / 2, pieRadius, startAngle, endAngle);
       ctx.closePath();
       ctx.fill();
+      ctx.save();
+
+      // write percent text
+      ctx.translate(canvasWidth / 2, canvasHeight / 2);
+      ctx.shadowColor = 'black';
+      ctx.shadowBlur = 5;
+      ctx.fillStyle = 'white';
+      ctx.font = `${this._params.textFontSize} ${this._params.textFontFamily}`;
+
+      const textX =
+        Math.cos(endAngle - finishAngle / 2) * pieRadius * this._params.textDistanceMultiplier;
+      const textY =
+        Math.sin(endAngle - finishAngle / 2) * pieRadius * this._params.textDistanceMultiplier;
+
+      ctx.fillText(`${percents[i]}%`, textX, textY);
+
+      ctx.restore();
       ctx.restore();
 
       startAngle += finishAngle;
     }
 
+    // draw donut hole
     ctx.globalCompositeOperation = 'destination-out';
 
     ctx.beginPath();
     ctx.arc(
       canvasWidth / 2,
       canvasHeight / 2,
-      pieRadius * this._donutRadiusMultiplier,
+      pieRadius * this._params.donutRadiusMultiplier,
       0,
       Math.PI * 2,
     );
@@ -64,6 +109,13 @@ class PollVis {
   _calculateRadiantFromPercent(percent) {
     const raidant = Math.PI / 180 * (360 * (percent / 100));
     return raidant;
+  }
+
+  _calculatePercents(values) {
+    const total = values.reduce((a, b) => a + b);
+
+    const percentArray = values.map(val => Math.round(val / total * 100));
+    return percentArray;
   }
 }
 
