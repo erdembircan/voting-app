@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import chalk from 'chalk';
 import session from 'express-session';
 import mainRoute from './routes';
+import apiRoutes from './routes/api';
 import fourOfourTemp from './templates/404.js';
 import sData from './sData';
 
@@ -33,6 +34,7 @@ export default class Server {
     this._app.use(cookieParser());
 
     this._app.use(mainRoute);
+    this._app.use('/api', apiRoutes);
 
     this._app.use((req, res) => {
       res.status(404).send(fourOfourTemp());

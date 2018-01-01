@@ -5,12 +5,14 @@ import authResp from '../templates/auth_res.js';
 import pollTemp from '../templates/poll.js';
 import createAuthString from '../utils/twitterAuth';
 import sData from '../sData';
-import { parseStringToObject, nonce, flashRead } from '../utils';
+import { parseStringToObject, nonce, flashRead, flashWrite } from '../utils';
 import { sign, verify } from '../utils/jwtUtils';
 import authenticate from '../middleware/authentication';
 
 require('../models/user');
+require('../models/poll');
 const User = require('mongoose').model('User');
+const Poll = require('mongoose').model('Poll');
 
 const router = express.Router();
 
@@ -71,8 +73,23 @@ router.get('/', (req, res, next) => {
   } else res.send(mainTemp(mainData));
 });
 
-router.get('/createpoll', authenticate, (req, res) => {
-  res.send('ok');
+router.get('/createpoll', authenticate, (req, res, next) => {
+  const newPoll = new Poll({
+    title: 'what is your favourite programming language?',
+    items: {
+      java: 8,
+      'C#': 9,
+      javascript: 18,
+      phyton: 1,
+    },
+    voters: ['1234', '123456789'],
+  });
+
+  newPoll.save((err, resp) => {
+    if (err) next(err);
+    flashWrite(req, 'message', `poll created. id: ${resp._id}`);
+    res.redirect('/');
+  });
 });
 
 router.get('/user', (req, res, next) => {
@@ -128,8 +145,8 @@ router.get('/login', (req, res, next) => {
       const parsedObj = parseStringToObject(data, '&');
 
       if (parsedObj.oauth_callback_confirmed === 'true') {
-        req.session.oauth_token = parsedObj.oauth_token;
-        req.session.oauth_token_secret = parsedObj.oauth_token_secret;
+        flashWrite(req, 'oauth_token', parsedObj.oauth_token);
+        flashWrite(req, 'oauth_token_secret', parsedObj.oauth_token_secret);
         res.redirect(
           302,
           `https://api.twitter.com/oauth/authenticate?oauth_token=${encodeURIComponent(parsedObj.oauth_token)}`,
@@ -183,7 +200,7 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
             if (findErr) next(findErr);
             const payload = sign(userData._id, sData['jwt-secret']);
             res.cookie('auth.loc', payload, { maxAge: 30 * 24 * 60 * 60 * 1000 });
-            req.session.message = 'log in successfull';
+            flashWrite(req, 'message', 'log in successfull');
             res.redirect('/auth_resp');
           });
         });
@@ -195,11 +212,20 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
 });
 
 router.get('/poll/:id', (req, res) => {
-  res.send(pollTemp({ id: req.params.id }));
+  Poll.findOne({ _id: req.params.id }, (err, resp) => {
+    if (err) return res.redirect('/');
+    res.send(pollTemp({ id: req.params.id }));
+  });
 });
 
 router.get('/auth_resp', (req, res) => {
   res.send(authResp());
+});
+
+router.get('/logout', (req, res) => {
+  if (req.cookies['auth.loc']) res.clearCookie('auth.loc');
+  flashWrite(req, 'message', 'logged out...');
+  res.redirect('/');
 });
 
 export default router;

@@ -46,4 +46,35 @@ function flashRead(req, key) {
   return value;
 }
 
-module.exports = { parseStringToObject, nonce, flashRead };
+/**
+ * write flash messages to session
+ * @param {object} req -request object
+ * @param {string} key - key
+ * @param {string} value - value
+ */
+function flashWrite(req, key, value) {
+  req.session[key] = value;
+}
+
+/**
+ * generate array of random rgb colors
+ * @param {number} amount - array length
+ * @return {array} - color array
+ */
+function generateColors(amount) {
+  const rand = () => Math.floor(Math.random() * 255);
+  const tempArray = [];
+  for (let i = 0; i < amount; i++) {
+    tempArray.push(`rgb(${rand()},${rand()},${rand()})`);
+  }
+
+  return tempArray;
+}
+
+module.exports = {
+  parseStringToObject,
+  nonce,
+  flashRead,
+  generateColors,
+  flashWrite,
+};
