@@ -41,8 +41,8 @@ class PollVis {
     const marginHeight = canvasHeight * 0.05;
 
     const pieRadius = (canvasWidth - marginWidth) / 2;
-
     ctx.save();
+
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     ctx.fillStyle = this._colors[0];
     ctx.shadowColor = 'rgba(0, 0, 0, 0.503)';
@@ -53,7 +53,6 @@ class PollVis {
     ctx.fill();
     ctx.save();
 
-    // ctx.restore();
 
     let startAngle = 0;
 
@@ -115,7 +114,7 @@ class PollVis {
   _calculatePercents(values) {
     const total = values.reduce((a, b) => a + b);
 
-    const percentArray = values.map(val => Math.round(val / total * 100));
+    const percentArray = values.map(val => Math.round(Math.ceil((val / total) * 100)));
     return percentArray;
   }
 }
