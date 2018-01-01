@@ -2,12 +2,12 @@ import express from 'express';
 import axios from 'axios';
 import mainTemp from '../templates/index.js';
 import authResp from '../templates/auth_res.js';
+import pollTemp from '../templates/poll.js';
 import createAuthString from '../utils/twitterAuth';
 import sData from '../sData';
 import { parseStringToObject, nonce, flashRead } from '../utils';
 import { sign, verify } from '../utils/jwtUtils';
 import authenticate from '../middleware/authentication';
-import { XMLHttpRequest } from 'xmlhttprequest';
 
 require('../models/user');
 const User = require('mongoose').model('User');
@@ -192,6 +192,10 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
         next(err);
       });
   } else next('token missmatch, try again later');
+});
+
+router.get('/poll/:id', (req, res) => {
+  res.send(pollTemp({ id: req.params.id }));
 });
 
 router.get('/auth_resp', (req, res) => {

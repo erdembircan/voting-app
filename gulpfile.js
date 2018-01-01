@@ -81,6 +81,7 @@ function bundle(b, outputPath, callback = () => {}) {
 const jsBundles = {
   'build/client/scripts/main_bundle.js': createBundle('./src/client/scripts/main.js'),
   'build/client/scripts/authResp.js': createBundle('./src/client/scripts/authResp.js'),
+  'build/client/scripts/poll.js': createBundle('./src/client/scripts/poll.js'),
 };
 
 gulp.task('client:js', () => {
