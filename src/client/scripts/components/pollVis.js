@@ -87,6 +87,7 @@ class PollVis {
 
       ctx.restore();
       ctx.restore();
+      ctx.restore();
 
       startAngle += finishAngle;
     }
