@@ -22,7 +22,14 @@ router.get('/favicon.ico', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  res.send(renderToLayout(mainLayout, mainTemp(), req, { user: req.session.user }));
+  res.send(renderToLayout(
+    mainLayout,
+    mainTemp({ userName: req.session.user ? req.session.user.name : '' }),
+    req,
+    {
+      user: req.session.user,
+    },
+  ));
 });
 
 router.get('/createpoll', authenticate, (req, res, next) => {
@@ -150,6 +157,7 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
             res.cookie('auth.loc', payload, { maxAge: 30 * 24 * 60 * 60 * 1000 });
             flashWrite(req, 'message', 'log in successfull');
 
+            // prepare for fetching user details from twitter
             const authString = createAuthString(
               {
                 consumer_key: sData['twitter-consumer-key'],
@@ -170,7 +178,7 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
               .then((resp) => {
                 req.session.user = {
                   avatar: resp.data.profile_image_url,
-                  name: 'working on that2',
+                  name: resp.data.name,
                 };
 
                 res.redirect('/auth_resp');
@@ -189,7 +197,10 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
 
 router.get('/poll/:id', (req, res) => {
   Poll.findOne({ _id: req.params.id }, (err, resp) => {
-    if (err) return res.redirect('/');
+    if (err) {
+      flashWrite(req, 'error', 'invalid poll id');
+      return res.redirect('/');
+    }
     res.send(renderToLayout(mainLayout, pollTemp({ id: req.params.id }), req, { user: req.session.user }));
   });
 });
