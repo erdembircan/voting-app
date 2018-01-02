@@ -1,5 +1,6 @@
 import express from 'express';
 import axios from 'axios';
+import mainLayout from '../templates/layouts/main.js';
 import mainTemp from '../templates/index.js';
 import authResp from '../templates/auth_res.js';
 import pollTemp from '../templates/poll.js';
@@ -21,18 +22,21 @@ router.get('/favicon.ico', (req, res) => {
 });
 
 router.get('/', (req, res, next) => {
+  console.log(req.session.user);
   const authCookie = req.cookies['auth.loc'];
   const mainData = {
     message: flashRead(req, 'message'),
     error: flashRead(req, 'error'),
-    extraScripts: "<script src= 'js/main_bundle.js' defer></script>",
+    extraScripts: "<script src= '/js/main_bundle.js' defer></script>",
   };
 
   if (authCookie) {
     verify(authCookie, sData['jwt-secret'], (err, data) => {
       if (err) {
         mainData.error = err;
-        res.send(mainTemp(mainData));
+        mainData.mainBody = mainTemp();
+        // res.send(mainTemp(mainData));
+        res.send(mainLayout(mainData));
       } else {
         User.findOne({ _id: data })
           .then((user) => {
@@ -60,7 +64,9 @@ router.get('/', (req, res, next) => {
                 mainData.user = {};
                 mainData.user.avatar = resp.data.profile_image_url;
                 mainData.user.name = 'working on that';
-                res.send(mainTemp(mainData));
+                req.session.user = mainData.user;
+                // res.send(mainTemp(mainData));
+                res.send(mainLayout(mainData));
               })
               .catch((err) => {
                 next(err);
@@ -71,7 +77,9 @@ router.get('/', (req, res, next) => {
           });
       }
     });
-  } else res.send(mainTemp(mainData));
+  } else res.send(mainLayout({ mainBody: mainTemp(), mainData }));
+
+  // res.send(mainTemp(mainData));
 });
 
 router.get('/createpoll', authenticate, (req, res, next) => {
@@ -215,7 +223,11 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
 router.get('/poll/:id', (req, res) => {
   Poll.findOne({ _id: req.params.id }, (err, resp) => {
     if (err) return res.redirect('/');
-    res.send(pollTemp({ id: req.params.id }));
+    // res.send(pollTemp({ id: req.params.id }));
+    const mainData = {};
+    mainData.user = req.session.user;
+    mainData.mainBody = pollTemp({ id: req.params.id });
+    res.send(mainLayout(mainData));
   });
 });
 
@@ -226,6 +238,7 @@ router.get('/auth_resp', (req, res) => {
 router.get('/logout', (req, res) => {
   if (req.cookies['auth.loc']) res.clearCookie('auth.loc');
   flashWrite(req, 'message', 'logged out...');
+  req.session.user = undefined;
   res.redirect('/');
 });
 
