@@ -71,10 +71,19 @@ function generateColors(amount) {
   return tempArray;
 }
 
+
+function renderToLayout(layout, partial, req, layoutParams = {}) {
+  layoutParams.mainBody = partial;
+  layoutParams.error = flashRead(req, 'error');
+  layoutParams.message = flashRead(req, 'message');
+  return layout(layoutParams);
+}
+
 module.exports = {
   parseStringToObject,
   nonce,
   flashRead,
   generateColors,
   flashWrite,
+  renderToLayout,
 };

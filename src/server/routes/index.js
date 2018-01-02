@@ -6,8 +6,8 @@ import authResp from '../templates/auth_res.js';
 import pollTemp from '../templates/poll.js';
 import createAuthString from '../utils/twitterAuth';
 import sData from '../sData';
-import { parseStringToObject, nonce, flashRead, flashWrite } from '../utils';
-import { sign, verify } from '../utils/jwtUtils';
+import { parseStringToObject, nonce, flashRead, flashWrite, renderToLayout } from '../utils';
+import { sign } from '../utils/jwtUtils';
 import authenticate from '../middleware/authentication';
 
 require('../models/user');
@@ -21,65 +21,8 @@ router.get('/favicon.ico', (req, res) => {
   res.sendStatus(203);
 });
 
-router.get('/', (req, res, next) => {
-  console.log(req.session.user);
-  const authCookie = req.cookies['auth.loc'];
-  const mainData = {
-    message: flashRead(req, 'message'),
-    error: flashRead(req, 'error'),
-    extraScripts: "<script src= '/js/main_bundle.js' defer></script>",
-  };
-
-  if (authCookie) {
-    verify(authCookie, sData['jwt-secret'], (err, data) => {
-      if (err) {
-        mainData.error = err;
-        mainData.mainBody = mainTemp();
-        // res.send(mainTemp(mainData));
-        res.send(mainLayout(mainData));
-      } else {
-        User.findOne({ _id: data })
-          .then((user) => {
-            const userToken = user.token;
-            const userTokenSecret = user.tokenSecret;
-
-            const authString = createAuthString(
-              {
-                consumer_key: sData['twitter-consumer-key'],
-                nonce: nonce(42),
-                signature_method: 'HMAC-SHA1',
-                token: userToken,
-                tokenSecret: userTokenSecret,
-              },
-              'get',
-              'https://api.twitter.com/1.1/account/verify_credentials.json',
-            );
-
-            axios({
-              method: 'get',
-              url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
-              headers: { Authorization: authString },
-            })
-              .then((resp) => {
-                mainData.user = {};
-                mainData.user.avatar = resp.data.profile_image_url;
-                mainData.user.name = 'working on that';
-                req.session.user = mainData.user;
-                // res.send(mainTemp(mainData));
-                res.send(mainLayout(mainData));
-              })
-              .catch((err) => {
-                next(err);
-              });
-          })
-          .catch((err) => {
-            next(err);
-          });
-      }
-    });
-  } else res.send(mainLayout({ mainBody: mainTemp(), mainData }));
-
-  // res.send(mainTemp(mainData));
+router.get('/', (req, res) => {
+  res.send(renderToLayout(mainLayout, mainTemp(), req, { user: req.session.user }));
 });
 
 router.get('/createpoll', authenticate, (req, res, next) => {
@@ -113,10 +56,6 @@ router.get('/user', (req, res, next) => {
     'get',
     'https://api.twitter.com/1.1/account/verify_credentials.json',
   );
-
-  const config = {
-    headers: { Authorization: authString },
-  };
 
   axios({
     method: 'get',
@@ -210,7 +149,35 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
             const payload = sign(userData._id, sData['jwt-secret']);
             res.cookie('auth.loc', payload, { maxAge: 30 * 24 * 60 * 60 * 1000 });
             flashWrite(req, 'message', 'log in successfull');
-            res.redirect('/auth_resp');
+
+            const authString = createAuthString(
+              {
+                consumer_key: sData['twitter-consumer-key'],
+                nonce: nonce(42),
+                signature_method: 'HMAC-SHA1',
+                token: userData.token,
+                tokenSecret: userData.tokenSecret,
+              },
+              'get',
+              'https://api.twitter.com/1.1/account/verify_credentials.json',
+            );
+
+            axios({
+              method: 'get',
+              url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
+              headers: { Authorization: authString },
+            })
+              .then((resp) => {
+                req.session.user = {
+                  avatar: resp.data.profile_image_url,
+                  name: 'working on that2',
+                };
+
+                res.redirect('/auth_resp');
+              })
+              .catch((err) => {
+                next(err);
+              });
           });
         });
       })
@@ -223,11 +190,7 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
 router.get('/poll/:id', (req, res) => {
   Poll.findOne({ _id: req.params.id }, (err, resp) => {
     if (err) return res.redirect('/');
-    // res.send(pollTemp({ id: req.params.id }));
-    const mainData = {};
-    mainData.user = req.session.user;
-    mainData.mainBody = pollTemp({ id: req.params.id });
-    res.send(mainLayout(mainData));
+    res.send(renderToLayout(mainLayout, pollTemp({ id: req.params.id }), req, { user: req.session.user }));
   });
 });
 
