@@ -1,4 +1,5 @@
 import IndexController from './indexController';
+import { setTimeout } from 'timers';
 
 const indexController = new IndexController('#base');
 
@@ -10,3 +11,4 @@ const { error } = errorHolder.dataset;
 
 if (message !== '') indexController.showToast(message);
 if (error !== '') indexController.showToast(error);
+
