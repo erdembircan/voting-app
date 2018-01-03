@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu')
+
 html
   font-family: 'Ubuntu', sans-serif
   box-sizing: border-box
@@ -17,6 +18,7 @@ body
   // background: url('https://pbs.twimg.com/profile_banners/893691474835013632/1506860824') center center no-repeat
   // background-size: cover
   // height: 70px
+  // box-shadow: 0px 5px 5px rgba(0,0,0,.1)
   // &:before
   //   content: ''
   //   position: absolute
@@ -24,7 +26,7 @@ body
   //   left: 0
   //   right: 0
   //   bottom: 0
-  //   background-image: linear-gradient(to right, rgba(9.8%, 52.2%, 75.7%, 100%), rgba(7.5%, 40%, 58%, 1))
+  //   background-image: linear-gradient(to right, rgba(9.8%, 52.2%, 75.7%, 1), rgba(7.5%, 40%, 58%, 0))
   background-image: linear-gradient(to right, rgba(9.8%, 52.2%, 75.7%, 100%) , rgba(7.5%, 40%, 58%, 1))
   height: 70px
   a
@@ -40,6 +42,28 @@ body
     align-items: center
     height: 100%  
     float: right
+  .left
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 100%  
+    float: left
+  .logo
+    display: flex
+    position: relative
+    justify-content: center
+    align-items: center
+    height: 100%
+    color: #97e6ff
+    font-weight: bold
+    font-size: 20px
+    padding: 10px
+    cursor: pointer
+    text-align: center
+    transition: all .2s ease-out
+  .logo:hover
+    font-size: 25px
+    color: white
   .navItem
     display: flex
     position: relative
@@ -69,17 +93,17 @@ body
   position: fixed
   bottom : 20px
   left : 100px
-  .toastShow
+  .toast
     margin: 5px
     min-width: 300px
     padding: 20px
     text-align: left
     background-color: rgba(105, 105, 105, 1)
     color: white
-    border-radius: 5px
-    box-shadow: 1px 1px 1px grey
+    // border-radius: 5px
+    box-shadow: 5px 5px 1px rgba(0,0,0,.1)
     opacity: 0
-    animation: riseUp .5s ease-out 1s forwards, disDown .5s ease-in 5s forwards
+    animation: riseUp .5s ease-out .8s forwards, disDown .5s ease-in 5s forwards
 
 @keyframes riseUp
   0% {opacity: 0; transform: translateY(50%)}

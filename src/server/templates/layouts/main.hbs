@@ -9,6 +9,13 @@
 
 <body id="base">
   <div class="topNav">
+    <div class="left">
+      <a href='/'>
+        <div class="logo">
+          VOTING APP
+        </div>
+      </a>
+    </div>
     <div class="right">
       {{#if user}}
       <a href='/createpoll'>
@@ -17,7 +24,7 @@
           <div class="hoverSelection"></div>
         </div>
       </a>
-      <a href='/poll/5a4a454a05c4bc3c1b78cef7'>
+      <a href='/poll/5a4a55e7872bec55be26b781'>
         <div class="navItem">
           Go Poll 1
           <div class="hoverSelection"></div>
@@ -50,8 +57,8 @@
 
   <script src="/js/index.js" defer></script>
 
-  <div data-message= '{{message}}' ></div>
-  <div data-error= '{{error}}' ></div>
+  <div data-message='{{message}}'></div>
+  <div data-error='{{error}}'></div>
 
 </body>
 
