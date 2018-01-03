@@ -28,7 +28,7 @@ export default class Server {
       secret: sData['session-secret'],
       resave: false,
       saveUninitialized: true,
-      cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
+      cookie: { maxAge: 365 * 24 * 60 * 60 * 1000 },
     }));
 
     this._app.use(cookieParser());

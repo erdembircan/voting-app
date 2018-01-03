@@ -5,6 +5,7 @@ html
   box-sizing: border-box
   background-color: #60b4f4
   -webkit-font-smoothing: antialiased
+  height: 100%
 
 *, *::before, *::after
   box-sizing: inherit
@@ -12,6 +13,7 @@ html
 body
   margin: 0px
   padding: 0px
+  height: 100%
 
 .topNav
   // position: relative
@@ -89,6 +91,9 @@ body
   .navItem:active
     background-color: darken(#97e6ff , 50%)
 
+
+
+
 .toastContainer
   position: fixed
   bottom : 20px
@@ -113,11 +118,17 @@ body
   0% {opacity: 1; transform: translateY(0)}
   100% {opacity: 0; transform : translateY(100%)}
 
+.indexWrapper
+  display: flex
+  flex-direction: column
+  justify-content: space-around
+  align-items: center
+
+
 .mainPageWrapper
   display: flex
   flex-direction: row
   justify-content: space-around
-  // align-items: center
 
 .pollPreview
   margin: 20px
@@ -145,7 +156,32 @@ body
     canvas
       transform: scale(1.2)
 
+.partialWrapper
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  align-items: center
 
+.footer
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  margin-top: 50px
+  // background-color: rgba(7.5%, 40%, 58%, 1)
+.footerImg
+  filter: contrast(40%)
+  height: 4rem
+
+.indexRibbon
+  background-color: #97e6ff
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 40px
+  text-align: center
+  height: 300px
+  
 .pollRow
   background-color: #97e6ff
   

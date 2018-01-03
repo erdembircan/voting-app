@@ -52,13 +52,26 @@
       {{/if}}
     </div>
   </div>
+  <div class="partialWrapper">
+    {{{mainBody}}}
 
-  {{{mainBody}}} {{{extraScripts}}}
+  </div>
+  <div class="footer">
+    <p>Erdem Bircan</p>
+    <a target='_blank' href="https://github.com/erdembircan">
+      <img class='footerImg' src="http://www.freeiconspng.com/uploads/github-logo-icon-30.png" alt="" />
+    </a>
+
+  </div>
+  {{{extraScripts}}}
 
   <script src="/js/index.js" defer></script>
 
   <div data-message='{{message}}'></div>
   <div data-error='{{error}}'></div>
+
+
+
 
 </body>
 
