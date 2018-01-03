@@ -37,9 +37,7 @@ router.get('/createpoll', authenticate, (req, res, next) => {
     title: 'what is your favourite programming language?',
     items: {
       java: 8,
-      'C#': 9,
-      javascript: 18,
-      phyton: 1,
+      phyton: 4,
     },
     voters: ['1234', '123456789'],
   });

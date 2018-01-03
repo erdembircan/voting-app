@@ -18,7 +18,7 @@ body
   // background: url('https://pbs.twimg.com/profile_banners/893691474835013632/1506860824') center center no-repeat
   // background-size: cover
   // height: 70px
-  // box-shadow: 0px 5px 5px rgba(0,0,0,.1)
+  box-shadow: 0px 5px 5px rgba(0,0,0,.1)
   // &:before
   //   content: ''
   //   position: absolute
@@ -112,3 +112,44 @@ body
 @keyframes disDown
   0% {opacity: 1; transform: translateY(0)}
   100% {opacity: 0; transform : translateY(100%)}
+
+.mainPageWrapper
+  display: flex
+  flex-direction: row
+  justify-content: space-around
+  align-items: center
+
+.pollPreview
+  margin: 20px
+  padding: 10px
+  background-color: rgba(9.8%, 52.2%, 75.7%, 1)
+  box-shadow: 5px 5px 1px rgba(0,0,0,.1)
+
+.pollTable
+  border-collapse: collapse
+  box-shadow: 5px 5px 5px rgba(0,0,0,.3)
+  th
+    background-color: #60b4f4
+  th,td
+    text-align: center
+    width: 200px
+    padding: 8px
+  tr:nth-child(even)
+    background-color: darken(#97e6ff , 10%)
+  tr
+    cursor: pointer
+    canvas
+      transition: all .3s ease-out
+  tr:hover
+    background-color: darken(#97e6ff , 30%)
+    canvas
+      transform: scale(1.2)
+
+
+.pollRow
+  background-color: #97e6ff
+  
+
+
+
+

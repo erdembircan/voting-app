@@ -1,6 +1,6 @@
 const range = document.createRange();
-range.setStart(document.body, 0);
 
-export default function parseHtml(str) {
+export default function parseHtml(str, start = document.body) {
+  range.setStart(start, 0);
   return range.createContextualFragment(str);
 }

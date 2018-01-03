@@ -1,3 +1,5 @@
+import { isString } from 'util';
+
 class PollVis {
   constructor(
     id,
@@ -15,8 +17,10 @@ class PollVis {
       ],
     },
   ) {
-    this._id = id;
-    this._canvas = document.querySelector(`[data-id='${this._id}']`);
+    if (isString(id)) {
+      this._id = id;
+      this._canvas = document.querySelector(`[data-id='${this._id}']`);
+    } else this._canvas = id;
     // this._colors = [
     //   'rgba(81, 145, 253, 1)',
     //   'rgba(22, 71, 233, 1)',
@@ -46,13 +50,12 @@ class PollVis {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     ctx.fillStyle = this._colors[0];
     ctx.shadowColor = 'rgba(0, 0, 0, 0.503)';
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 5;
     ctx.beginPath();
     ctx.arc(canvasWidth / 2, canvasHeight / 2, pieRadius, 0, Math.PI * 2);
     ctx.closePath();
     ctx.fill();
     ctx.save();
-
 
     let startAngle = 0;
 
@@ -115,7 +118,7 @@ class PollVis {
   _calculatePercents(values) {
     const total = values.reduce((a, b) => a + b);
 
-    const percentArray = values.map(val => Math.round(Math.ceil((val / total) * 100)));
+    const percentArray = values.map(val => Math.round(Math.ceil(val / total * 100)));
     return percentArray;
   }
 }
