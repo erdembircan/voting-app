@@ -64,4 +64,26 @@ body
       border-bottom: 5px solid #1985c1
   .navItem:active
     background-color: darken(#97e6ff , 50%)
-    
+
+.toastContainer
+  position: fixed
+  bottom : 20px
+  left : 100px
+  .toastShow
+    min-width: 300px
+    padding: 20px
+    text-align: left
+    background-color: rgba(105, 105, 105, 1)
+    color: white
+    border-radius: 5px
+    box-shadow: 1px 1px 1px grey
+    opacity: 0
+    animation: riseUp .5s ease-out 1s forwards, disDown .5s ease-in 5s forwards
+
+@keyframes riseUp
+  0% {opacity: 0; transform: translateY(50%)}
+  100% {opacity: 1; transform : translateY(0)}
+
+@keyframes disDown
+  0% {opacity: 1; transform: translateY(0)}
+  100% {opacity: 0; transform : translateY(100%)}
