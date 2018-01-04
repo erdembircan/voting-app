@@ -1,3 +1,6 @@
+import inputSegment from '../../../src/server/templates/partials/inputSegment.hbs';
+import parseHtml from './util/parseHtml';
+
 const addB = document.querySelector('#addItem');
 const removeB = document.querySelector('#removeItem');
 
@@ -26,6 +29,10 @@ function itemHandler(type) {
     itemContainer.removeChild(allItems[itemLength - 1]);
   } else if (type === 'add' && itemLength <= 7) {
     const postNumber = itemLength + 1;
-    itemContainer.innerHTML += `<div class='item'><label for='item${postNumber}'>Item #${postNumber}</label><input type='text' name='item${postNumber}' id='item${postNumber}' required /></div`;
+    const inputElement = parseHtml(inputSegment({ itemNumber: postNumber }), itemContainer);
+
+    itemContainer.appendChild(inputElement);
+
+    // itemContainer.innerHTML += `<div class='item'><label for='item${postNumber}'>Item #${postNumber}</label><input type='text' name='item${postNumber}' id='item${postNumber}' required /></div`;
   }
 }

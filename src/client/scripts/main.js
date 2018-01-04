@@ -34,8 +34,10 @@ axios.get('/api/polls/all').then((resp) => {
     }()),
   }));
 
-  popularPolls.addPolls(parsedData.slice(0));
-  latestPolls.addPolls(parsedData.slice(2, 5));
+  const dataSize = parsedData.length;
+
+  popularPolls.addPolls(parsedData.slice(0, 5));
+  latestPolls.addPolls(parsedData.slice(dataSize - 3, dataSize));
 });
 
 const demoPoll = new DemoPoll(5, 'demo');

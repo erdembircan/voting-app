@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import { flashWrite } from '../utils';
 import authenticate from '../middleware/authentication';
 
@@ -7,8 +6,29 @@ const router = new express.Router();
 const Poll = require('mongoose').model('Poll');
 
 router.post('/createpoll', authenticate, (req, res) => {
-  console.log(req.cookies['auth.loc']);
-  console.log(req.body);
+  const items = {};
+
+  Object.keys(req.body).map((key) => {
+    if (key.includes('item')) {
+      items[key] = 1;
+    }
+  });
+
+  const newPoll = new Poll({
+    title: req.body.title,
+    items,
+    voters: ['some dude'],
+  });
+
+  newPoll.save((err, savedData) => {
+    if (err) {
+      flashWrite(req, 'error', 'error creating poll :(');
+      return res.redirect('/');
+    }
+
+    flashWrite(req, 'message', 'poll created :)');
+    return res.redirect(`/poll/${savedData._id}`);
+  });
 });
 
 router.get('/polls/all', (req, res, next) => {
