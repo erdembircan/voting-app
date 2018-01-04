@@ -7,7 +7,7 @@ const Poll = require('mongoose').model('Poll');
 
 router.post(
   '/createpoll',
-  authenticate({ redirectUtl: '/', error: 'you need to be logged in...' }),
+  authenticate({ redirectUrl: '/', error: 'you need to be logged in...' }),
   (req, res) => {
     const items = {};
 
