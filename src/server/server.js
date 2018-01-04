@@ -1,5 +1,6 @@
 import compression from 'compression';
 import zlib from 'zlib';
+import bodyParser from 'body-parser';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import chalk from 'chalk';
@@ -32,6 +33,8 @@ export default class Server {
     }));
 
     this._app.use(cookieParser());
+
+    this._app.use(bodyParser.urlencoded({ extended: false }));
 
     this._app.use(mainRoute);
     this._app.use('/api', apiRoutes);

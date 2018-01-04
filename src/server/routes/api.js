@@ -1,9 +1,15 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import { flashWrite } from '../utils';
+import authenticate from '../middleware/authentication';
 
 const router = new express.Router();
 const Poll = require('mongoose').model('Poll');
+
+router.post('/createpoll', authenticate, (req, res) => {
+  console.log(req.cookies['auth.loc']);
+  console.log(req.body);
+});
 
 router.get('/polls/all', (req, res, next) => {
   Poll.find({}, (err, resp) => {

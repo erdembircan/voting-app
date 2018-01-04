@@ -4,6 +4,7 @@ import mainLayout from '../templates/layouts/main.js';
 import mainTemp from '../templates/index.js';
 import authResp from '../templates/auth_res.js';
 import pollTemp from '../templates/poll.js';
+import createPollTemp from '../templates/createPoll.js';
 import createAuthString from '../utils/twitterAuth';
 import sData from '../sData';
 import { parseStringToObject, nonce, flashRead, flashWrite, renderToLayout } from '../utils';
@@ -33,20 +34,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/createpoll', authenticate, (req, res, next) => {
-  const newPoll = new Poll({
-    title: 'what is your favourite programming language?',
-    items: {
-      java: 8,
-      phyton: 4,
-    },
-    voters: ['1234', '123456789'],
-  });
-
-  newPoll.save((err, resp) => {
-    if (err) next(err);
-    flashWrite(req, 'message', `poll created. id: ${resp._id}`);
-    res.redirect('/');
-  });
+  res.send(renderToLayout(mainLayout, createPollTemp(), req, {
+    user: req.session.user,
+  }));
 });
 
 router.get('/user', (req, res, next) => {
