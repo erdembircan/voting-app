@@ -33,11 +33,15 @@ router.get('/', (req, res) => {
   ));
 });
 
-router.get('/createpoll', authenticate, (req, res, next) => {
-  res.send(renderToLayout(mainLayout, createPollTemp(), req, {
-    user: req.session.user,
-  }));
-});
+router.get(
+  '/createpoll',
+  authenticate({ error: 'you need to be logged in...', redirectUrl: '/' }),
+  (req, res, next) => {
+    res.send(renderToLayout(mainLayout, createPollTemp(), req, {
+      user: req.session.user,
+    }));
+  },
+);
 
 router.get('/user', (req, res, next) => {
   const authString = createAuthString(

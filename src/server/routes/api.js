@@ -5,31 +5,35 @@ import authenticate from '../middleware/authentication';
 const router = new express.Router();
 const Poll = require('mongoose').model('Poll');
 
-router.post('/createpoll', authenticate, (req, res) => {
-  const items = {};
+router.post(
+  '/createpoll',
+  authenticate({ redirectUtl: '/', error: 'you need to be logged in...' }),
+  (req, res) => {
+    const items = {};
 
-  Object.keys(req.body).map((key) => {
-    if (key.includes('item')) {
-      items[key] = 1;
-    }
-  });
+    Object.keys(req.body).map((key) => {
+      if (key.includes('item')) {
+        items[key] = 1;
+      }
+    });
 
-  const newPoll = new Poll({
-    title: req.body.title,
-    items,
-    voters: ['some dude'],
-  });
+    const newPoll = new Poll({
+      title: req.body.title,
+      items,
+      voters: ['some dude'],
+    });
 
-  newPoll.save((err, savedData) => {
-    if (err) {
-      flashWrite(req, 'error', 'error creating poll :(');
-      return res.redirect('/');
-    }
+    newPoll.save((err, savedData) => {
+      if (err) {
+        flashWrite(req, 'error', 'error creating poll :(');
+        return res.redirect('/');
+      }
 
-    flashWrite(req, 'message', 'poll created :)');
-    return res.redirect(`/poll/${savedData._id}`);
-  });
-});
+      flashWrite(req, 'message', 'poll created :)');
+      return res.redirect(`/poll/${savedData._id}`);
+    });
+  },
+);
 
 router.get('/polls/all', (req, res, next) => {
   Poll.find({}, (err, resp) => {
