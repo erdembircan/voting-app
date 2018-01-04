@@ -38,8 +38,8 @@ axios.get('/api/polls/all').then((resp) => {
   latestPolls.addPolls(parsedData.slice(2, 5));
 });
 
-const demoPoll = new DemoPoll(3, 'demo');
-const demoPoll2 = new DemoPoll(3, 'demo2');
+const demoPoll = new DemoPoll(5, 'demo');
+const demoPoll2 = new DemoPoll(4, 'demo2');
 const demoPoll3 = new DemoPoll(3, 'demo3');
 demoPoll.start();
 demoPoll2.start();
