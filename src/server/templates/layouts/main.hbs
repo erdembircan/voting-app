@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://use.fontawesome.com/29b0cb94dd.js"></script>
   <link rel="stylesheet" href="/css/main.css" /> {{{extraHead}}}
 </head>
 
@@ -45,8 +46,11 @@
       {{else}}
       <a href="/login" target="_blank" id='popUp'>
         <div class="navItem">
-          Log in
-          <div class="hoverSelection"></div>
+          <div>
+            Sign in with <br/>
+            <i class="fa fa-twitter fa-2x" style='color: #00aced' aria-hidden="true"></i>
+            <div class="hoverSelection"></div>
+          </div>
         </div>
       </a>
       {{/if}}
@@ -69,9 +73,6 @@
 
   <div data-message='{{message}}'></div>
   <div data-error='{{error}}'></div>
-
-
-
 
 </body>
 

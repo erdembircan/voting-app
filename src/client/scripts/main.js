@@ -1,5 +1,6 @@
 import PollPreviews from './components/pollPreviews';
 import axios from 'axios';
+import DemoPoll from './components/demoPoll';
 
 document.querySelectorAll('#popUp').forEach((item) => {
   item.addEventListener('click', (e) => {
@@ -37,14 +38,9 @@ axios.get('/api/polls/all').then((resp) => {
   latestPolls.addPolls(parsedData.slice(2, 5));
 });
 
-// popularPolls.addPolls([
-//   { title: 'test', totalVotes: 5, id: '5a4cd917c98b1d22e5b0a22e' },
-//   { title: 'test2', totalVotes: 10, id: '5a4cdb6e83eff923b09eb068' },
-//   { title: 'test3', totalVotes: 10, id: '5a4cdc58b397a82856e2f8c8' },
-// ]);
-
-// latestPolls.addPolls([
-//   { title: 'test', totalVotes: 5, id: '5a4cd917c98b1d22e5b0a22e' },
-//   { title: 'test2', totalVotes: 10, id: '5a4cdb6e83eff923b09eb068' },
-//   { title: 'test3', totalVotes: 10, id: '5a4cdc58b397a82856e2f8c8' },
-// ]);
+const demoPoll = new DemoPoll(3, 'demo');
+const demoPoll2 = new DemoPoll(3, 'demo2');
+const demoPoll3 = new DemoPoll(3, 'demo3');
+demoPoll.start();
+demoPoll2.start();
+demoPoll3.start();
