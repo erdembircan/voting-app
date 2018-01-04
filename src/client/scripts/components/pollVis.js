@@ -21,13 +21,7 @@ class PollVis {
       this._id = id;
       this._canvas = document.querySelector(`[data-id='${this._id}']`);
     } else this._canvas = id;
-    // this._colors = [
-    //   'rgba(81, 145, 253, 1)',
-    //   'rgba(22, 71, 233, 1)',
-    //   'rgba(232, 42, 55, 1)',
-    //   'rgba(13, 169, 33, 1)',
-    //   'rgba(166, 72, 71, 1)',
-    // ];
+ 
     this._params = params;
     this._colors = this._params.colors;
   }
