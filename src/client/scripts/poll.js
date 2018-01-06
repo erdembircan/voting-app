@@ -8,11 +8,13 @@ const splitUrl = window.location.href.split('/');
 const id = splitUrl[splitUrl.length - 1];
 let colors = [];
 let drawn = false;
+let busy = false;
 
-const getData = () =>
+const getData = () => {
   axios
     .get(`../api/polls/${id}`)
     .then((resp) => {
+      busy = false;
       const values = [];
       const items = [];
       Object.keys(resp.data.items).map((item) => {
@@ -35,6 +37,7 @@ const getData = () =>
     .catch((err) => {
       console.log(err);
     });
+};
 
 getData();
 
@@ -71,6 +74,11 @@ function drawChart(values, dataValues) {
       .enter()
       .append('div')
       .on('click', (e) => {
+        if (busy) {
+          console.log('busy');
+          return;
+        }
+        busy = true;
         axios.post(`/api/vote?id=${id}&item=${e.item}`).then((resp) => {
           window.location.reload();
         });
