@@ -1,9 +1,10 @@
 import express from 'express';
-import { flashWrite } from '../utils';
+import { flashWrite, parseStringToObject } from '../utils';
 import authenticate from '../middleware/authentication';
 
 const router = new express.Router();
 const Poll = require('mongoose').model('Poll');
+const Voters = require('mongoose').model('Voters');
 
 router.post(
   '/createpoll',
@@ -17,6 +18,11 @@ router.post(
       }
     });
 
+    if (items === {}) {
+      flashWrite(req, 'error', 'error creating poll :(');
+      return res.redirect('/');
+    }
+
     const newPoll = new Poll({
       title: req.body.title,
       items,
@@ -24,16 +30,71 @@ router.post(
     });
 
     newPoll.save((err, savedData) => {
-      if (err) {
-        flashWrite(req, 'error', 'error creating poll :(');
-        return res.redirect('/');
-      }
+      const voters = new Voters({
+        pollId: savedData._id,
+        sessionIds: [],
+      });
 
-      flashWrite(req, 'message', 'poll created :)');
-      return res.redirect(`/poll/${savedData._id}`);
+      voters.save((err, voter) => {
+        if (err) {
+          flashWrite(req, 'error', 'error creating poll :(');
+          return res.redirect('/');
+        }
+
+        flashWrite(req, 'message', 'poll created :)');
+        return res.redirect(`/poll/${savedData._id}`);
+      });
     });
   },
 );
+
+router.post('/vote', (req, res) => {
+  const { id, item } = req.query;
+  if (!req.session.id) {
+    flashWrite(req, 'error', 'no session id found');
+    return res.send(null);
+  }
+  Voters.findOne({ pollId: id || 0 })
+    .then((found) => {
+      const voters = found.sessionIds;
+
+      if (voters.includes(req.session.id)) {
+        flashWrite(req, 'error', 'you already voted for that poll :(');
+        return res.send(null);
+      }
+
+      Poll.findOne({ _id: id }, (err, poll) => {
+        if (err) return null;
+        const items = poll.items;
+        if (!items[item]) {
+          flashWrite(req, 'error', 'could not vote :(');
+          return res.send(saved);
+        }
+        items[item]++;
+        poll.items = {};
+        poll.items = items;
+        poll.save((err, saved) => {
+          if (err) {
+            flashWrite(req, 'error', 'could not vote :(');
+            return res.send(saved);
+          }
+          flashWrite(
+            req,
+            'message',
+            "voted <span style='color:chartreuse; font-size: 2rem'>😍</span>",
+          );
+
+          found.sessionIds.push(req.session.id);
+          found.save((err, saved) => res.send(saved));
+        });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      flashWrite(req, 'error', 'an error occured, try again later');
+      return res.send(null);
+    });
+});
 
 router.get('/polls/all', (req, res, next) => {
   Poll.find({}, (err, resp) => {

@@ -13,6 +13,7 @@ import authenticate from '../middleware/authentication';
 
 require('../models/user');
 require('../models/poll');
+require('../models/voters');
 const User = require('mongoose').model('User');
 const Poll = require('mongoose').model('Poll');
 
@@ -193,7 +194,12 @@ router.get('/poll/:id', (req, res) => {
       flashWrite(req, 'error', 'invalid poll id');
       return res.redirect('/');
     }
-    res.send(renderToLayout(mainLayout, pollTemp({ id: req.params.id }), req, { user: req.session.user }));
+
+    let pollTitle = resp.title;
+    pollTitle += pollTitle.endsWith('?') ? '' : '?';
+    res.send(renderToLayout(mainLayout, pollTemp({ id: req.params.id, pollTitle }), req, {
+      user: req.session.user,
+    }));
   });
 });
 

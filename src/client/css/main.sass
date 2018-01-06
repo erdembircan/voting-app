@@ -197,7 +197,7 @@ body
   background-color: #97e6ff
 
 .chart
-  width: 50%
+  width: 100%
   div
     background-color: steelblue
     text-align: right
@@ -205,4 +205,8 @@ body
     padding: 10px
     margin: 1px
     color: white
-
+    &:hover
+     background-color: darken(steelblue , 20%)
+    
+.bar
+  transition: all .3s ease-out

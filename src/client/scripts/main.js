@@ -27,10 +27,12 @@ axios.get('/api/polls/all').then((resp) => {
     id: poll._id,
     totalVotes: (function total() {
       let count = 0;
-      Object.keys(poll.items).map((key) => {
-        count += poll.items[key];
-      });
-      return count;
+      if (poll.items) {
+        Object.keys(poll.items).map((key) => {
+          count += poll.items[key];
+        });
+        return count;
+      }
     }()),
   }));
 
