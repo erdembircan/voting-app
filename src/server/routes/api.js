@@ -13,7 +13,7 @@ router.post(
 
     Object.keys(req.body).map((key) => {
       if (key.includes('item')) {
-        items[key] = 1;
+        items[req.body[key]] = 1;
       }
     });
 

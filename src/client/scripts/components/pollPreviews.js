@@ -31,17 +31,17 @@ class PollPreviews {
           const values = [];
           Object.keys(resp.data.items).map((item) => {
             values.push(resp.data.items[item]);
-            const canvas = parsed.querySelector('canvas');
-            const pollVis = new PollVis(canvas, {
-              donutRadiusMultiplier: 0.4,
-              textDistanceMultiplier: 0.8,
-              textFontFamily: 'Ubuntu',
-              textFontSize: '0rem',
-              colors: generateColors(values.length),
-            });
-
-            pollVis.draw(values);
           });
+          const canvas = parsed.querySelector('canvas');
+          const pollVis = new PollVis(canvas, {
+            donutRadiusMultiplier: 0.4,
+            textDistanceMultiplier: 0.8,
+            textFontFamily: 'Ubuntu',
+            textFontSize: '0rem',
+            colors: generateColors(values.length),
+          });
+
+          pollVis.draw(values);
         })
         .catch((err) => {
           console.log(err);
