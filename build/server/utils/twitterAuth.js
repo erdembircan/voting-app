@@ -1,9 +1,5 @@
 'use strict';
 
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
-
 var _hmacsha = require('hmacsha1');
 
 var _hmacsha2 = _interopRequireDefault(_hmacsha);
@@ -44,7 +40,7 @@ var _params = {
 function createAuthString(parameters, type, url) {
   var tempArray = [];
 
-  (0, _keys2.default)(parameters).map(function (key) {
+  Object.keys(parameters).map(function (key) {
     if (key === 'body' || key === 'tokenSecret') return;
     var pushStr = 'oauth_' + key + '="' + encodeURIComponent(parameters[key]) + '"';
     tempArray.push(pushStr);

@@ -1,9 +1,5 @@
 'use strict';
 
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
-
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -25,7 +21,7 @@ var Voters = require('mongoose').model('Voters');
 router.post('/createpoll', (0, _authentication2.default)({ redirectUrl: '/', error: 'you need to be logged in ' + _emoji.emoji.smileyUnamused }), function (req, res) {
   var items = {};
 
-  (0, _keys2.default)(req.body).map(function (key) {
+  Object.keys(req.body).map(function (key) {
     if (key.includes('item')) {
       items[req.body[key]] = 1;
     }
