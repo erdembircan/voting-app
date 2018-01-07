@@ -49,7 +49,7 @@ router.get(
 router.get('/login', (req, res, next) => {
   const authString = createAuthString(
     {
-      callback: 'http://localhost:3000/sign-in-with-twitter/',
+      callback: 'https://intense-dusk-58236.herokuapp.com/sign-in-with-twitter/',
       consumer_key: sData['twitter-consumer-key'],
       nonce: nonce(42),
       signature_method: 'HMAC-SHA1',

@@ -40,7 +40,6 @@
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
-
     "hbsfy": "^2.8.1",
     "jest": "^22.0.4",
     "merge-stream": "^1.0.1",
