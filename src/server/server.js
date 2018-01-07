@@ -17,8 +17,9 @@ const compress = compression({
 
 export default class Server {
   constructor(port, dbObject) {
-    this._port = port;
     this._app = express();
+    this._app.set('port', process.env.PORT || port);
+    this._port = this._app.get('port');
     this._app.use(compress);
     this._db = dbObject;
     this._app.use('/css', express.static(path.resolve(__dirname, '../client/css')));
