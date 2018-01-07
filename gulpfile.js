@@ -87,7 +87,7 @@ const jsBundles = {
 };
 
 gulp.task('client:js', () => {
-  mergeStream(Object.keys(jsBundles).map(key => bundle(jsBundles[key], key)));
+  return mergeStream(Object.keys(jsBundles).map(key => bundle(jsBundles[key], key)));
 });
 
 gulp.task('client:style', () =>
@@ -100,6 +100,16 @@ gulp.task('client:style', () =>
     .pipe(plugins.sourcemaps.write('./'))
     .pipe(gulp.dest(gulpPaths.stylesBUILD))
     .pipe(browserSync.stream()));
+
+gulp.task('client:style:prod', () =>
+  gulp
+    .src(gulpPaths.stylesSRC)
+    .pipe(plugins.sass.sync().on('error', plugins.sass.logError))
+    .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.sass({ outputStyle: 'compressed' }))
+    .pipe(plugins.autoprefixer({ browsers: ['last 2 versions'] }))
+    .pipe(plugins.sourcemaps.write('./'))
+    .pipe(gulp.dest(gulpPaths.stylesBUILD)));
 
 gulp.task('server:js', () =>
   gulp
@@ -166,4 +176,8 @@ gulp.task('serve', (done) => {
     ['server:develop', 'browsersync:init', 'watch'],
     done
   );
+});
+
+gulp.task('prod', (done) => {
+  runSequence('clean', ['server:js', 'server:templates'], ['client:style:prod', 'client:js'], done);
 });
