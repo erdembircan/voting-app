@@ -4,7 +4,6 @@
   "description": "freeCodeCamp voting app project",
   "main": "index.js",
   "scripts": {
-    "prestart" : "gulp prod",
     "start": "node ./build/server/index.js",
     "develop": "gulp serve",
     "test": "jest --verbose --watchAll"

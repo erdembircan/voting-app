@@ -178,6 +178,3 @@ gulp.task('serve', (done) => {
   );
 });
 
-gulp.task('prod', (done) => {
-  runSequence('clean', ['server:js', 'server:templates'], ['client:style:prod', 'client:js'], done);
-});
