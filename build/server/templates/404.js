@@ -1,0 +1,3 @@
+var Handlebars = require("handlebars/runtime");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"utf8\" />\n  <meta name=\"viewport\" content=\"width = device-width, initial-scale=1.0\" />\n  <title>Page not found</title>\n</head>\n\n<body style=\"background-color: red\">\n  Page not found...\n\n</body>\n\n</html>";
+},"useData":true});
