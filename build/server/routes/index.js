@@ -78,7 +78,7 @@ router.get('/createpoll', (0, _authentication2.default)({ error: 'you need to be
 
 router.get('/login', function (req, res, next) {
   var authString = (0, _twitterAuth2.default)({
-    callback: 'http://localhost:3000/sign-in-with-twitter/',
+    callback: 'https://intense-dusk-58236.herokuapp.com/sign-in-with-twitter/',
     consumer_key: _sData2.default['twitter-consumer-key'],
     nonce: (0, _utils.nonce)(42),
     signature_method: 'HMAC-SHA1'
