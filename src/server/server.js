@@ -9,6 +9,7 @@ import mainRoute from './routes';
 import apiRoutes from './routes/api';
 import fourOfourTemp from './templates/404.js';
 import sData from './sData';
+import path from 'path';
 
 const compress = compression({
   flush: zlib.Z_PARTIAL_FLUSH,
@@ -20,8 +21,8 @@ export default class Server {
     this._app = express();
     this._app.use(compress);
     this._db = dbObject;
-    this._app.use('/css', express.static('../client/css'));
-    this._app.use('/js', express.static('../client/scripts'));
+    this._app.use('/css', express.static(path.resolve(__dirname, '../client/css')));
+    this._app.use('/js', express.static(path.resolve(__dirname, '../client/scripts')));
 
     this._app.set('json spaces', 2);
 
