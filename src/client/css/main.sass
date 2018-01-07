@@ -130,6 +130,7 @@ body
   justify-content: space-around
   align-items: center
   width: 100%
+  margin-top: 10px
 
 
 .mainPageWrapper
@@ -192,6 +193,7 @@ body
   height: 300px
   width: 100%
   text-shadow: 0 0 10px rgb(60,56,56)
+  margin-top: 50px
   
 .pollRow
   background-color: #97e6ff
@@ -214,4 +216,14 @@ body
 
 .toastEmoji
   float: right
+
+
+@media screen and (max-width:499px)
+  .mainPageWrapper
+    flex-direction: column
+  .demoContainer
+    display: none
+  .indexRibbon
+    height: 150px
+    font-size: 20px
   
