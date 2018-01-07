@@ -1,3 +1,3 @@
-var Handlebars = require("handlebars/runtime");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"indexWrapper\">\n  <div class=\"mainPageWrapper\">\n  </div>\n\n  <div class=\"indexRibbon\">\n    Create, vote and share your polls around the interwebz \n\n    <div style='margin-top: 10px'>\n      <canvas data-id=\"demo\" width=\"75\" height=\"75\"></canvas>\n      <canvas data-id=\"demo2\" width=\"150\" height=\"150\"></canvas>\n      <canvas data-id=\"demo3\" width=\"75\" height=\"75\"></canvas>\n\n    </div>\n  </div>\n</div>\n\n\n<script src=\"/js/main_bundle.js\" defer></script>";
 },"useData":true});

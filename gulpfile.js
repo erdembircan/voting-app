@@ -114,15 +114,21 @@ gulp.task('server:templates', () =>
   gulp
     .src(gulpPaths.templatesSRC)
     .pipe(plugins.handlebars())
-    .pipe(through.obj((file, enc, callback) => {
-      file.defineModuleOptions.require = { Handlebars: 'handlebars/runtime' };
-      callback(null, file);
-    }))
-    .pipe(plugins.defineModule('commonjs'))
-    .pipe(plugins.rename((path) => {
-      path.extname = '.js';
-    }))
+    .pipe(plugins.defineModule('node'))
     .pipe(gulp.dest(gulpPaths.templatesBUILD)));
+
+// gulp
+//   .src(gulpPaths.templatesSRC)
+//   .pipe(plugins.handlebars())
+//   .pipe(through.obj((file, enc, callback) => {
+//     file.defineModuleOptions.require = { Handlebars: 'handlebars/runtime' };
+//     callback(null, file);
+//   }))
+//   .pipe(plugins.defineModule('commonjs'))
+//   .pipe(plugins.rename((path) => {
+//     path.extname = '.js';
+//   }))
+//   .pipe(gulp.dest(gulpPaths.templatesBUILD)));
 
 gulp.task('develop-server-restart', () => {
   plugins.developServer.restart((err) => {

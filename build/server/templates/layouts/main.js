@@ -1,4 +1,4 @@
-var Handlebars = require("handlebars/runtime");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1;
 
   return "      <a href='/createpoll'>\n        <div class=\"navItem\">\n          Create Poll\n          <div class=\"hoverSelection\"></div>\n        </div>\n      </a>\n      <a href=\"/user\">\n        <div class=\"navItem\">\n          <img style=\"border-radius:10%\" src="

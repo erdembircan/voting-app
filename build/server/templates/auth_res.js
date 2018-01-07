@@ -1,3 +1,3 @@
-var Handlebars = require("handlebars/runtime");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<p align=\"center\">\n  Redirecting...\n  <br/> If this window doesn't close after 5 seconds, manually close it and refresh main page.\n  <br/>\n  <img src=\"https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif\" height=\"60%\" />\n</p>\n<script src=\"/js/authResp.js\" defer></script>";
 },"useData":true});
