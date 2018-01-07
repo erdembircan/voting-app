@@ -49,13 +49,13 @@ body
     justify-content: center
     align-items: center
     height: 100%  
-    float: right
+    // float: right
   .left
     display: flex
     justify-content: center
     align-items: center
     height: 100%  
-    float: left
+    // float: left
   .logo
     display: flex
     position: relative
@@ -228,4 +228,17 @@ body
     font-size: 20px
   .toastContainer
     left: calc(50% - 150px)
+  .indexWrapper
+    margin-top: 90px
+  .left
+    float: none
+  .right
+    float: null
+    box-shadow: 0px 5px 5px rgba(0,0,0,.1)
+
+@media screen and (min-width:499px)
+  .left
+    float: left
+  .right
+    float: right
   

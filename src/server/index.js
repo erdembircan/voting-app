@@ -16,7 +16,3 @@ require('./models').connect(dbUri);
 
 const server = new Server(args['server-port']);
 server.listen();
-
-setInterval(() => {
-  console.log('busy');
-}, 5 * 60 * 1000);
