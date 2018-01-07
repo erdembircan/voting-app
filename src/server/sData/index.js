@@ -4,4 +4,5 @@ module.exports = {
   'session-secret': 'rhodochrositepyritequartzazurite',
   'jwt-secret': 'rhodochrositepyritequartzazuriterhodochrositepyritequartzazurite',
   'mongo-prod': 'mongodb://colby:colbypass@ds111103.mlab.com:11103/colbtest',
+  'signin-redirect-prod': 'https://intense-dusk-58236.herokuapp.com/sign-in-with-twitter/',
 };

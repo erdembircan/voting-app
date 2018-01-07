@@ -45,11 +45,15 @@ router.get(
   },
 );
 
-
 router.get('/login', (req, res, next) => {
+  const callback =
+    process.env.NODE_ENV === 'production'
+      ? sData['signin-redirect-prod']
+      : 'http://localhost:3000/sign-in-with-twitter';
+
   const authString = createAuthString(
     {
-      callback: 'https://intense-dusk-58236.herokuapp.com/sign-in-with-twitter/',
+      callback,
       consumer_key: sData['twitter-consumer-key'],
       nonce: nonce(42),
       signature_method: 'HMAC-SHA1',
