@@ -32,7 +32,5 @@ function itemHandler(type) {
     const inputElement = parseHtml(inputSegment({ itemNumber: postNumber }), itemContainer);
 
     itemContainer.appendChild(inputElement);
-
-    // itemContainer.innerHTML += `<div class='item'><label for='item${postNumber}'>Item #${postNumber}</label><input type='text' name='item${postNumber}' id='item${postNumber}' required /></div`;
   }
 }

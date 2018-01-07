@@ -10,6 +10,7 @@ import sData from '../sData';
 import { parseStringToObject, nonce, flashRead, flashWrite, renderToLayout } from '../utils';
 import { sign } from '../utils/jwtUtils';
 import authenticate from '../middleware/authentication';
+import { emoji } from '../utils/emoji';
 
 require('../models/user');
 require('../models/poll');
@@ -36,7 +37,7 @@ router.get('/', (req, res) => {
 
 router.get(
   '/createpoll',
-  authenticate({ error: 'you need to be logged in...', redirectUrl: '/' }),
+  authenticate({ error: `you need to be logged in ${emoji.smileyUnamused}`, redirectUrl: '/' }),
   (req, res, next) => {
     res.send(renderToLayout(mainLayout, createPollTemp(), req, {
       user: req.session.user,
@@ -44,31 +45,6 @@ router.get(
   },
 );
 
-router.get('/user', (req, res, next) => {
-  const authString = createAuthString(
-    {
-      consumer_key: sData['twitter-consumer-key'],
-      nonce: nonce(42),
-      signature_method: 'HMAC-SHA1',
-      token: '',
-      tokenSecret: '',
-    },
-    'get',
-    'https://api.twitter.com/1.1/account/verify_credentials.json',
-  );
-
-  axios({
-    method: 'get',
-    url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
-    headers: { Authorization: authString },
-  })
-    .then((resp) => {
-      res.send(resp.data);
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
 
 router.get('/login', (req, res, next) => {
   const authString = createAuthString(
@@ -148,7 +124,7 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
             if (findErr) next(findErr);
             const payload = sign(userData._id, sData['jwt-secret']);
             res.cookie('auth.loc', payload, { maxAge: 30 * 24 * 60 * 60 * 1000 });
-            flashWrite(req, 'message', 'log in successfull');
+            flashWrite(req, 'message', `log in successfull ${emoji.smileyBig}`);
 
             // prepare for fetching user details from twitter
             const authString = createAuthString(
@@ -191,7 +167,7 @@ router.get('/sign-in-with-twitter', (req, res, next) => {
 router.get('/poll/:id', (req, res) => {
   Poll.findOne({ _id: req.params.id }, (err, resp) => {
     if (err) {
-      flashWrite(req, 'error', 'invalid poll id');
+      flashWrite(req, 'error', `invalid poll id ${emoji.smileyFrown}`);
       return res.redirect('/');
     }
 
@@ -209,7 +185,7 @@ router.get('/auth_resp', (req, res) => {
 
 router.get('/logout', (req, res) => {
   if (req.cookies['auth.loc']) res.clearCookie('auth.loc');
-  flashWrite(req, 'message', 'logged out...');
+  flashWrite(req, 'message', `logged out ${emoji.smileyUnamused}`);
   req.session.user = undefined;
   res.redirect('/');
 });

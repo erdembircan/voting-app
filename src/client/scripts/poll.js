@@ -1,11 +1,11 @@
 import axios from 'axios';
 import * as d3 from 'd3';
 import PollVis from './components/pollVis';
-import { setInterval, setTimeout } from 'timers';
 import { generateColors } from '../../server/utils/index';
 
 const splitUrl = window.location.href.split('/');
 const id = splitUrl[splitUrl.length - 1];
+
 let colors = [];
 let drawn = false;
 let busy = false;
@@ -38,8 +38,6 @@ const getData = () => {
       console.log(err);
     });
 };
-
-getData();
 
 function joinValueColors(values, colors, items) {
   const tempArray = [];
@@ -98,3 +96,5 @@ function drawChart(values, dataValues) {
     drawn = true;
   }
 }
+
+getData();

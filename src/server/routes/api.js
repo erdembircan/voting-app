@@ -1,6 +1,7 @@
 import express from 'express';
 import { flashWrite, parseStringToObject } from '../utils';
 import authenticate from '../middleware/authentication';
+import { emoji } from '../utils/emoji';
 
 const router = new express.Router();
 const Poll = require('mongoose').model('Poll');
@@ -8,7 +9,7 @@ const Voters = require('mongoose').model('Voters');
 
 router.post(
   '/createpoll',
-  authenticate({ redirectUrl: '/', error: 'you need to be logged in...' }),
+  authenticate({ redirectUrl: '/', error: `you need to be logged in ${emoji.smileyUnamused}` }),
   (req, res) => {
     const items = {};
 
@@ -41,7 +42,7 @@ router.post(
           return res.redirect('/');
         }
 
-        flashWrite(req, 'message', 'poll created :)');
+        flashWrite(req, 'message', `poll created ${emoji.smileyHeart}`);
         return res.redirect(`/poll/${savedData._id}`);
       });
     });
@@ -59,7 +60,7 @@ router.post('/vote', (req, res) => {
       const voters = found.sessionIds;
 
       if (voters.includes(req.session.id)) {
-        flashWrite(req, 'error', 'you already voted for that poll :(');
+        flashWrite(req, 'error', `you already voted for that poll ${emoji.smileyFrown}`);
         return res.send(null);
       }
 
@@ -67,7 +68,7 @@ router.post('/vote', (req, res) => {
         if (err) return null;
         const items = poll.items;
         if (!items[item]) {
-          flashWrite(req, 'error', 'could not vote :(');
+          flashWrite(req, 'error', `could not vote ${emoji.smileyFrown}`);
           return res.send(saved);
         }
         items[item]++;
@@ -75,14 +76,10 @@ router.post('/vote', (req, res) => {
         poll.items = items;
         poll.save((err, saved) => {
           if (err) {
-            flashWrite(req, 'error', 'could not vote :(');
+            flashWrite(req, 'error', `could not vote ${emoji.smileyFrown}`);
             return res.send(saved);
           }
-          flashWrite(
-            req,
-            'message',
-            "voted <span style='color:chartreuse; font-size: 2rem'>😍</span>",
-          );
+          flashWrite(req, 'message', `voted ${emoji.smileyHeart}`);
 
           found.sessionIds.push(req.session.id);
           found.save((err, saved) => res.send(saved));
