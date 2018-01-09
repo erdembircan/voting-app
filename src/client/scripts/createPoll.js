@@ -22,7 +22,7 @@ removeB.addEventListener('click', (e) => {
 });
 
 function itemHandler(type) {
-  const allItems = document.querySelectorAll('.item');
+  const allItems = document.querySelectorAll('#itemContainer .item');
   const itemLength = allItems.length;
   if (type === 'remove' && itemLength <= 2) return;
   if (type === 'remove') {
