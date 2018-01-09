@@ -234,7 +234,7 @@ router.get(
                   }()),
                 });
               })))
-              .then((data) => {
+              .then((resolve) => {
                 const dataObject = JSON.stringify({ array: pollData });
                 const dataHtmlObject = `<div data-polls='${dataObject}'` + '></div>';
                 res.send(renderToLayout(
