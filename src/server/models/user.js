@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema({
     index: { unique: true },
   },
   tokenSecret: String,
+  polls: Array,
 });
 
 UserSchema.pre('save', function saveHook(next) {

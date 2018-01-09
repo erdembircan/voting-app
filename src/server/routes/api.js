@@ -6,6 +6,7 @@ import { emoji } from '../utils/emoji';
 const router = new express.Router();
 const Poll = require('mongoose').model('Poll');
 const Voters = require('mongoose').model('Voters');
+const Users = require('mongoose').model('User');
 
 router.post(
   '/createpoll',
