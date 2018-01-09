@@ -5,10 +5,11 @@ import mainTemp from '../templates/index.js';
 import authResp from '../templates/auth_res.js';
 import pollTemp from '../templates/poll.js';
 import createPollTemp from '../templates/createPoll.js';
+import userAreaTemp from '../templates/userArea.js';
 import createAuthString from '../utils/twitterAuth';
 import sData from '../sData';
 import { parseStringToObject, nonce, flashRead, flashWrite, renderToLayout } from '../utils';
-import { sign } from '../utils/jwtUtils';
+import { sign, verify } from '../utils/jwtUtils';
 import authenticate from '../middleware/authentication';
 import { emoji } from '../utils/emoji';
 
@@ -186,6 +187,70 @@ router.get('/poll/:id', (req, res) => {
 router.get('/auth_resp', (req, res) => {
   res.send(authResp());
 });
+
+router.get(
+  '/user',
+  authenticate({ error: 'you need to be logged in', redirectUrl: '/' }),
+  (req, res) => {
+    const authCookie = req.cookies['auth.loc'];
+    if (authCookie) {
+      verify(authCookie, sData['jwt-secret'], (err, decoded) => {
+        if (err) {
+          flashWrite(req, 'error', 'you need to be logged in');
+          return res.redirect('/');
+        }
+
+        User.findOne({ _id: decoded }, (err, user) => {
+          if (err) {
+            flashWrite(req, 'error', 'you need to be logged in');
+            return res.redirect('/');
+          }
+          const { polls } = user;
+          if (polls.length === 0) {
+            res.send(renderToLayout(
+              mainLayout,
+              userAreaTemp({ userPolls: "You don't have any polls yet" }),
+              req,
+              {
+                user: req.session.user,
+              },
+            ));
+          } else {
+            const pollData = [];
+
+            Promise.all(polls.map(poll =>
+              Poll.findOne({ _id: poll }).then((data) => {
+                pollData.push({
+                  title: data.title,
+                  id: data._id,
+                  totalVotes: (function total() {
+                    let count = 0;
+                    if (data.items) {
+                      Object.keys(data.items).map((key) => {
+                        count += data.items[key];
+                      });
+                      return count;
+                    }
+                  }()),
+                });
+              })))
+              .then((data) => {
+                const dataObject = { array: pollData };
+                const dataHtmlObject = `<div data-polls=${JSON.stringify(dataObject)}></div>`;
+                res.send(renderToLayout(mainLayout, userAreaTemp({ userPolls: dataHtmlObject }), req, {
+                  user: req.session.user,
+                }));
+              })
+              .catch((err) => {
+                flashWrite(req, 'error', 'an error occured');
+                return res.redirect('/');
+              });
+          }
+        });
+      });
+    }
+  },
+);
 
 router.get('/logout', (req, res) => {
   if (req.cookies['auth.loc']) res.clearCookie('auth.loc');

@@ -1,12 +1,14 @@
 import express from 'express';
 import { flashWrite, parseStringToObject } from '../utils';
+import { verify } from '../utils/jwtUtils';
 import authenticate from '../middleware/authentication';
 import { emoji } from '../utils/emoji';
+import sData from '../sData';
 
 const router = new express.Router();
 const Poll = require('mongoose').model('Poll');
 const Voters = require('mongoose').model('Voters');
-const Users = require('mongoose').model('User');
+const User = require('mongoose').model('User');
 
 router.post(
   '/createpoll',
@@ -43,8 +45,32 @@ router.post(
           return res.redirect('/');
         }
 
-        flashWrite(req, 'message', `poll created ${emoji.smileyHeart}`);
-        return res.redirect(`/poll/${savedData._id}`);
+        const authCookie = req.cookies['auth.loc'];
+
+        verify(authCookie, sData['jwt-secret'], (err, sub) => {
+          if (err) {
+            flashWrite(req, 'error', 'error creating poll :(');
+            return res.redirect('/');
+          }
+
+          User.findOne({ _id: sub }, (err, user) => {
+            if (err) {
+              flashWrite(req, 'error', 'error creating poll :(');
+              return res.redirect('/');
+            }
+
+            user.polls.push(savedData._id);
+
+            user.save((err, saved) => {
+              if (err) {
+                flashWrite(req, 'error', 'error creating poll :(');
+                return res.redirect('/');
+              }
+              flashWrite(req, 'message', `poll created ${emoji.smileyHeart}`);
+              return res.redirect(`/poll/${savedData._id}`);
+            });
+          });
+        });
       });
     });
   },
