@@ -10,6 +10,11 @@ const Poll = require('mongoose').model('Poll');
 const Voters = require('mongoose').model('Voters');
 const User = require('mongoose').model('User');
 
+const pollQueryType = {
+  top: 'top',
+  latest: 'latest',
+};
+
 router.post(
   '/createpoll',
   authenticate({ redirectUrl: '/', error: `you need to be logged in ${emoji.smileyUnamused}` }),
@@ -130,6 +135,34 @@ router.get('/polls/all', (req, res, next) => {
     res.send(resp);
   });
 });
+
+router.get('/polls', (req, res, next) => {
+  const { type = pollQueryType.latest, limit = 10 } = req.query;
+
+  Poll.find({}).then((polls) => {
+    if (type === pollQueryType.latest) {
+      return res.send(polls.slice(Math.sign(polls.length - limit) > 0 ? polls.length - limit : 0).reverse());
+    }
+    const countVotes = (poll) => {
+      let count = 0;
+      if (poll.items) {
+        Object.keys(poll.items).map((key) => {
+          count += poll.items[key];
+        });
+        return count;
+      }
+    };
+
+    const sortFunction = (a, b) => {
+      const votesA = countVotes(a);
+      const votesB = countVotes(b);
+      return votesB - votesA;
+    };
+
+    return res.send(polls.sort(sortFunction).slice(0, limit));
+  });
+});
+
 router.get('/polls/:id', (req, res, next) => {
   Poll.findOne({ _id: req.params.id }, (err, resp) => {
     if (err) return res.redirect('/');

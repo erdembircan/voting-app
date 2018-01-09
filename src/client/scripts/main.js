@@ -21,7 +21,7 @@ document.querySelectorAll('#popUp').forEach((item) => {
 const popularPolls = new PollPreviews('.mainPageWrapper', 'popular polls');
 const latestPolls = new PollPreviews('.mainPageWrapper', 'latest polls');
 
-axios.get('/api/polls/all').then((resp) => {
+axios.get('/api/polls?type=latest&limit=5').then((resp) => {
   const parsedData = resp.data.map(poll => ({
     title: poll.title,
     id: poll._id,
@@ -36,10 +36,25 @@ axios.get('/api/polls/all').then((resp) => {
     }()),
   }));
 
-  const dataSize = parsedData.length;
+  latestPolls.addPolls(parsedData);
+});
 
-  popularPolls.addPolls(parsedData.slice(0, 5));
-  latestPolls.addPolls(parsedData.slice(dataSize - 3, dataSize));
+axios.get('/api/polls?type=top&limit=5').then((resp) => {
+  const parsedData = resp.data.map(poll => ({
+    title: poll.title,
+    id: poll._id,
+    totalVotes: (function total() {
+      let count = 0;
+      if (poll.items) {
+        Object.keys(poll.items).map((key) => {
+          count += poll.items[key];
+        });
+        return count;
+      }
+    }()),
+  }));
+
+  popularPolls.addPolls(parsedData);
 });
 
 const demoPoll = new DemoPoll(5, 'demo');
