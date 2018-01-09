@@ -6,7 +6,7 @@ import { generateColors } from '../../../server/utils/index';
 import axios from 'axios';
 
 class PollPreviews {
-  constructor(container, message) {
+  constructor(container, message, options = { addDelete: false }) {
     this._baseContainer = document.querySelector(container);
     this._container = parseHtml(pollPreviews({ pollMessage: message })).firstChild;
     this._pollList = this._container.querySelector('.tableBody');
