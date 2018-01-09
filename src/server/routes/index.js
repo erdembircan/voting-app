@@ -190,19 +190,19 @@ router.get('/auth_resp', (req, res) => {
 
 router.get(
   '/user',
-  authenticate({ error: 'you need to be logged in', redirectUrl: '/' }),
+  authenticate({ error: `you need to be logged in ${emoji.smileyUnamused}`, redirectUrl: '/' }),
   (req, res) => {
     const authCookie = req.cookies['auth.loc'];
     if (authCookie) {
       verify(authCookie, sData['jwt-secret'], (err, decoded) => {
         if (err) {
-          flashWrite(req, 'error', 'you need to be logged in');
+          flashWrite(req, 'error', `you need to be logged in ${emoji.smileyUnamused}`);
           return res.redirect('/');
         }
 
         User.findOne({ _id: decoded }, (err, user) => {
           if (err) {
-            flashWrite(req, 'error', 'you need to be logged in');
+            flashWrite(req, 'error', `you need to be logged in ${emoji.smileyUnamused}`);
             return res.redirect('/');
           }
           const { polls } = user;
@@ -235,14 +235,22 @@ router.get(
                 });
               })))
               .then((data) => {
-                const dataObject = { array: pollData };
-                const dataHtmlObject = `<div data-polls=${JSON.stringify(dataObject)}></div>`;
-                res.send(renderToLayout(mainLayout, userAreaTemp({ userPolls: dataHtmlObject }), req, {
-                  user: req.session.user,
-                }));
+                const dataObject = JSON.stringify({ array: pollData });
+                const dataHtmlObject = `<div data-polls='${dataObject}'` + '></div>';
+                res.send(renderToLayout(
+                  mainLayout,
+                  userAreaTemp({
+                    userPolls: dataHtmlObject,
+                    extraScripts: "<script src='/js/userArea.js' defer></script>",
+                  }),
+                  req,
+                  {
+                    user: req.session.user,
+                  },
+                ));
               })
               .catch((err) => {
-                flashWrite(req, 'error', 'an error occured');
+                flashWrite(req, 'error', `an error occured ${emoji.smileyFrown}`);
                 return res.redirect('/');
               });
           }

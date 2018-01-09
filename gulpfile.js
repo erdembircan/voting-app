@@ -84,6 +84,7 @@ const jsBundles = {
   'build/client/scripts/poll.js': createBundle('./src/client/scripts/poll.js'),
   'build/client/scripts/index.js': createBundle('./src/client/scripts/index.js'),
   'build/client/scripts/createPoll.js': createBundle('./src/client/scripts/createPoll.js'),
+  'build/client/scripts/userArea.js': createBundle('./src/client/scripts/userArea.js'),
 };
 
 gulp.task('client:js', () => {
