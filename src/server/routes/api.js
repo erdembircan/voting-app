@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import { flashWrite, parseStringToObject } from '../utils';
 import { verify } from '../utils/jwtUtils';
 import authenticate from '../middleware/authentication';
@@ -169,5 +170,35 @@ router.get('/polls/:id', (req, res, next) => {
     res.send(resp);
   });
 });
+
+router.post(
+  '/deletePoll',
+  authenticate({ redirectUrl: '/', error: `you need to be logged in ${emoji.smileyUnamused}` }),
+  (req, res) => {
+    const pollId = req.query.id;
+
+    const authToken = req.cookies['auth.loc'];
+
+    if (authToken) {
+      verify(authToken, sData['jwt-secret'], (err, decoded) => {
+        if (err) return res.send(err);
+        User.findOne({ _id: decoded })
+          .then((user) => {
+            const stringArray = user.polls.map(poll => poll.toString());
+            if (!stringArray.includes(pollId)) {
+              return res.send('error');
+            }
+            Poll.findByIdAndRemove(pollId)
+              .then((poll) => {
+                user.polls.splice(stringArray.indexOf(pollId), 1);
+                user.save().then(resp => res.send('error'));
+              })
+              .catch(err => res.send(err));
+          })
+          .catch(err => res.send(err));
+      });
+    } else return res.send('error');
+  },
+);
 
 module.exports = router;

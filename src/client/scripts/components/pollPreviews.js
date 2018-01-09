@@ -6,11 +6,12 @@ import { generateColors } from '../../../server/utils/index';
 import axios from 'axios';
 
 class PollPreviews {
-  constructor(container, message, options = { addDelete: false }) {
+  constructor(container, message, extraData) {
     this._baseContainer = document.querySelector(container);
-    this._container = parseHtml(pollPreviews({ pollMessage: message })).firstChild;
+    this._container = parseHtml(pollPreviews({ pollMessage: message, extraDataHead: extraData ? extraData.head : undefined })).firstChild;
     this._pollList = this._container.querySelector('.tableBody');
     this._baseContainer.appendChild(this._container);
+    this.extraData = extraData;
   }
 
   addPolls(data) {
@@ -19,6 +20,7 @@ class PollPreviews {
         title: item.title,
         totalVotes: item.totalVotes,
         id: item.id,
+        enableDelete: this.extraData,
       });
 
       const parsed = parseHtml(poll, this._pollList).firstChild;
